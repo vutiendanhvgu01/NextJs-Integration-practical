@@ -1,4 +1,4 @@
-:root {
+/* :root {
   --max-width: 1100px;
   --border-radius: 12px;
   --font-mono: ui-monospace, Menlo, Monaco, 'Cascadia Mono', 'Segoe UI Mono',
@@ -104,4 +104,84 @@ a {
   html {
     color-scheme: dark;
   }
+} */
+header {
+  width: 100%;
+  background-color: #333;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* CSS styles for the logo */
+
+/* CSS styles for the search box */
+.search-box {
+  display: flex;
+  align-items: center;
+  padding: 30px;
+}
+
+.search-input {
+  padding: 5px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  margin-right: 5px;
+  width: 200px;
+}
+
+.search-button {
+  padding: 5px 10px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.search-button:hover {
+  background-color: #45a049;
+}
+footer {
+  background-color: #333;
+  padding: 30px 0;
+  color: #fff;
+  text-align: center;
+  font-size: 14px;
+}
+
+.footer-links {
+  list-style: none;
+  padding: 0;
+  margin: 20px 0;
+}
+
+.footer-links li {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.footer-links li a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.footer-social-icons {
+  list-style: none;
+  padding: 0;
+  margin: 20px 0;
+}
+
+.footer-social-icons li {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.footer-social-icons li a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 18px;
+}
+.button-active {
+  background-color: black;
 }
