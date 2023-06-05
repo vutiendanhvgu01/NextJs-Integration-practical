@@ -1,41 +1,45 @@
+import { Box, Button, Grid, TextField } from "@mui/material";
 import { useRouter } from "next/router";
 import { useState } from "react";
-
+import SearchIcon from '@mui/icons-material/Search';
 type Props = {};
 
 const HeaderMain = (props: Props) => {
   const router = useRouter();
   const [searchInput, setSearchInput] = useState<string>("");
   return (
-    <header>
-      <div>
-        <div className="search-box">
-          <input
-            type="text"
-            className="search-input"
-            placeholder="Search..."
+    <Box>
+      <Grid container>
+        <Grid item xs={2}>
+          <TextField
+            id="outlined-basic"
+            label="Title"
+            variant="outlined"
             value={searchInput}
             onChange={(event) => {
               setSearchInput(event.target.value);
             }}
           />
-          <button
-            className="search-button"
-            onClick={() => {
-              router.push({
+        </Grid>
+        <Grid item>
+          <Button
+            variant="contained"
+            startIcon={<SearchIcon />}
+            sx={{ height: "56px" }}
+            onClick={async () => {
+              await router.push({
                 query: {
-                  ...router.query,
                   name: searchInput,
                 },
               });
+              setSearchInput("");
             }}
           >
             Search
-          </button>
-        </div>
-       
-      </div>
-    </header>
+          </Button>
+        </Grid>
+      </Grid>
+    </Box>
   );
 };
 

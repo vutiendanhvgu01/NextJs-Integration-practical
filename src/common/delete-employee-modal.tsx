@@ -6,9 +6,10 @@ import DialogContentText from "@mui/material/DialogContentText";
 import { useRouter } from "next/router";
 import { FC, useState } from "react";
 import Loader from "./loader";
+
 type Props = {
   openDelete: boolean;
-
+  handleLoaderOpen?:()=>void;
   handleClickClosed: () => void;
   employee: string | undefined;
 };
@@ -17,15 +18,10 @@ const DeleteEmployeeModal: FC<Props> = ({
   openDelete,
   handleClickClosed,
   employee,
+  handleLoaderOpen
 }) => {
   const router = useRouter();
-  const [openLoader, setOpenLoader] = useState(false);
-  const handleLoaderClose = () => {
-    setOpenLoader(false);
-  };
-  const handleLoaderOpen = () => {
-    setOpenLoader(true);
-  };
+  
   return (
     <div>
       <Dialog open={openDelete} onClose={handleClickClosed}>
@@ -37,22 +33,24 @@ const DeleteEmployeeModal: FC<Props> = ({
         <DialogActions>
           <Button onClick={handleClickClosed}>Disagree</Button>
           <Button
-            onClick={ async () => {
-              handleLoaderOpen()
-              await router.push({
+            onClick={ () => {
+              if(handleLoaderOpen) {
+                handleLoaderOpen()
+              }
+              router.push({
                 query: {
                   ...router.query,
                   action: "delete-employee",
                   id: employee,
                 },
               });
-              handleLoaderClose();  
+              
               handleClickClosed();
             }}
           >
             Agree
           </Button>
-          <Loader openLoader={openLoader} />
+        
         </DialogActions>
       </Dialog>
     </div>

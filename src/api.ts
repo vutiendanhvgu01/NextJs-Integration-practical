@@ -1,16 +1,25 @@
-import axios, { AxiosRequestConfig } from "axios";
+import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
+import { CreateEmployee } from "./common/add-employee-modal";
+import { Employee } from "./pages/employees";
 axios.defaults.baseURL = process.env.BASE_URL;
-export const getEmployeeList = async (
+
+export const getEmployeeList = (
   params?: AxiosRequestConfig["params"]
-) => {
-  const res = await axios.get(`/users/`, { params });
-  return res.data;
+): Promise<AxiosResponse<Employee>> => {
+  const res = axios.get(`/users/`, { params });
+  return res;
 };
-export const deleteEmployee = async (id: string) => {
-  await axios.delete(`/users/${id}`);
-};
-
-export const getEmployeeDetail = async (id: string) => {
-  return (await axios.get(`/users/${id}`)).data;
+export const deleteEmployee = (id: string): Promise<AxiosResponse> => {
+  return axios.delete(`/users/${id}`);
 };
 
+export const getEmployeeDetail = (
+  id: string
+): Promise<AxiosResponse<Employee>> => {
+  return axios.get(`/users/${id}`);
+};
+export const createEmployee = (
+  values: CreateEmployee
+): Promise<AxiosResponse> => {
+  return axios.post(`/users`, values);
+};

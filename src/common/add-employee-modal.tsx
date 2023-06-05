@@ -1,12 +1,13 @@
-import { Box, Grid, TextField } from "@mui/material";
+import { createEmployee } from "@/api";
+import { Box, BoxProps, Grid, TextField } from "@mui/material";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
-import axios from "axios";
 import { useRouter } from "next/router";
-import React, { FC } from "react";
+import { FC, useState } from "react";
+import Loader from "./loader";
 
-const style = {
-  position: "absolute" as "absolute",
+const style: BoxProps['sx'] = {
+  position: "absolute",
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
@@ -17,19 +18,29 @@ const style = {
   p: 4,
 };
 type AddEmployeeModalProps = {
-  handleOpen: ()=>void,
-  handleClosed: ()=>void,
+  handleOpen: () => void,
+  handleClosed: () => void,
   open: boolean,
 }
-const AddEmployeeModal:FC<AddEmployeeModalProps> = ({open,handleClosed}) => {
+export interface CreateEmployee {
+  name: string,
+  specialty: string,
+}
+const AddEmployeeModal: FC<AddEmployeeModalProps> = ({ open, handleClosed }) => {
   const router = useRouter()
-  
-  const [name, setName] = React.useState("");
-  const [specialty, setSpecialty] = React.useState("");
-  
+
+  const [name, setName] = useState("");
+  const [specialty, setSpecialty] = useState("");
+  const [openLoader, setOpenLoader] = useState(false);
+  const handleLoaderClose = () => {
+    setOpenLoader(false);
+  };
+  const handleLoaderOpen = () => {
+    setOpenLoader(true);
+  };
   return (
     <>
-      
+
       <Modal
         open={open}
         onClose={handleClosed}
@@ -65,28 +76,34 @@ const AddEmployeeModal:FC<AddEmployeeModalProps> = ({open,handleClosed}) => {
                 variant="contained"
                 sx={{ height: "56px" }}
                 onClick={async () => {
-                  const values = {
+                  handleLoaderOpen()
+                  const values: CreateEmployee = {
                     name: name,
                     specialty: specialty,
                   };
-                  const res  = await axios
-                    .post(`${process.env.BASE_URL}/users`, values)
-                  if(res.status === 201){
-                    router.push({query:{
-                    ...router.query,
-                    orderBy:'id',
-                    order: 'desc'
-                    }})
+                  try {
+                  const res = await createEmployee(values)
+                  if (res.status === 201) {
+                    router.push('/employees')
+                  }
+                  handleLoaderClose()
+                  setName('')
+                  setSpecialty('')
+                  } catch (error) {
+                    console.log(error,'error')
                   }
                   handleClosed()
+                  
                 }}
               >
                 Submit
               </Button>
             </Grid>
           </Grid>
+          <Loader openLoader={openLoader} />
         </Box>
       </Modal>
+
     </>
   );
 };

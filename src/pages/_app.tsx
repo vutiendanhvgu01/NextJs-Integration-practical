@@ -8,7 +8,6 @@ export default function App({ Component, pageProps }: AppProps) {
       <ResusedLayout>
         <Component {...pageProps} />
       </ResusedLayout>
-      
     </>
   );
 }

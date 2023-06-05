@@ -1,4 +1,4 @@
-import { CardActionArea } from "@mui/material";
+import { Box, CardActionArea } from "@mui/material";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
@@ -14,13 +14,13 @@ type EmployeeDetailProps = {
 
 const EmployeeDetail: FC<EmployeeDetailProps> = ({ employeeDetail }) => {
   return (
-    <div>
-      <Card sx={{ maxWidth: 345 }}>
+    <Box  sx={{padding: '100px 0', display:'flex', justifyContent:'center'}}>
+      <Card sx={{ width: 900 }}>
         <CardActionArea>
           <CardMedia
             component="img"
             height="300"
-            image={employeeDetail.avatar}
+            image={`https://picsum.photos/1980/1600?random=${employeeDetail.id}`}
           />
           <CardContent>
             <Typography gutterBottom variant="h5" component="div">
@@ -32,7 +32,8 @@ const EmployeeDetail: FC<EmployeeDetailProps> = ({ employeeDetail }) => {
           </CardContent>
         </CardActionArea>
       </Card>
-    </div>
+    </Box>
+
   );
 };
 
@@ -43,7 +44,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   return {
     props: {
-      employeeDetail: res || null,
+      employeeDetail: res.data || null,
     },
   };
 };

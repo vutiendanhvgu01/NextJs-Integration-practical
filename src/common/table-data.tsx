@@ -16,36 +16,37 @@ import { Employee } from "../pages/employees";
 import AddEmployeeModal from "./add-employee-modal";
 import DeleteEmployeeModal from "./delete-employee-modal";
 import AddIcon from "@mui/icons-material/Add";
+import { Box, Pagination } from "@mui/material";
+import Loader from "@/common/loader";
+
 type TableEmployeeProps = {
+  [key: string]: any;
   data: Employee[];
 };
 
-const TableEmployee: FC<TableEmployeeProps> = ({ data }) => {
+const TableEmployee: FC<TableEmployeeProps> = ({ data, open: openLoader, handleLoaderOpen }) => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [openDelete, setOpenDelete] = useState(false);
-
   const [employeeID, setEmployeeID] = useState<string | undefined>();
-
   const handleClickClose = () => {
     setOpenDelete(false);
   };
-
-  
   const [currentPage, setCurrentPage] = useState<number>();
-  const pageNumber = 10;
-  const pages = Array.from({ length: pageNumber }, (_, index) => index + 1);
+
+
+
   return (
     <>
-      <TableContainer 
+      <TableContainer
         component={Paper}
-        sx={{ margin: "25px 0", background: "#E0E0E0",border: "1px solid black"  }}
-       
+        sx={{ margin: "25px 0", boxShadow: ' rgba(99, 99, 99, 0.2) 0px 2px 8px 0px' }}
+
       >
-        <div
-          style={{
+        <Box
+          sx={{
             display: "flex",
             justifyContent: "end",
             padding: "20px 20px 20px 0",
@@ -54,21 +55,21 @@ const TableEmployee: FC<TableEmployeeProps> = ({ data }) => {
           <Button
             startIcon={<AddIcon />}
             onClick={handleOpen}
-            sx={{ background: "#3399FF", color: "black" }}
+            variant="contained"
           >
             Add Employee
           </Button>
-        </div>
+        </Box>
 
         <Table sx={{ minWidth: 650, minHeight: 500 }} aria-label="simple table">
           <TableHead>
-            <TableRow>
-              <TableCell align="center">Employee ID</TableCell>
-              <TableCell align="right">Name</TableCell>
-              <TableCell align="right">Avatar</TableCell>
-              <TableCell align="right">Date of creation</TableCell>
-              <TableCell align="right">Specialty</TableCell>
-              <TableCell align="right">Delete Action</TableCell>
+            <TableRow >
+              <TableCell align="center" sx={{ fontWeight: 'Bold' }}>Employee ID</TableCell>
+              <TableCell align="right" sx={{ fontWeight: 'Bold' }}>Name</TableCell>
+              <TableCell align="right" sx={{ fontWeight: 'Bold' }}>Avatar</TableCell>
+              <TableCell align="right" sx={{ fontWeight: 'Bold' }}>Date of creation</TableCell>
+              <TableCell align="right" sx={{ fontWeight: 'Bold' }}>Specialty</TableCell>
+              <TableCell align="right" sx={{ fontWeight: 'Bold' }}>Delete Action</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -89,8 +90,8 @@ const TableEmployee: FC<TableEmployeeProps> = ({ data }) => {
                   <TableCell align="right">
                     <Image
                       alt=""
-                      loader={() => employee.avatar}
-                      src={employee.avatar}
+                      loader={() => `https://picsum.photos/1980/1600?random=${employee.id}`}
+                      src={`https://picsum.photos/200/300?random=${employee.id}`}
                       width={50}
                       height={50}
                     />
@@ -102,7 +103,7 @@ const TableEmployee: FC<TableEmployeeProps> = ({ data }) => {
                   <TableCell align="right">
                     <Button
                       variant="outlined"
-                      sx={{ color: "red" }}
+                      color="error"
                       startIcon={<DeleteIcon />}
                       onClick={() => {
                         setOpenDelete(true);
@@ -116,23 +117,12 @@ const TableEmployee: FC<TableEmployeeProps> = ({ data }) => {
               ))}
           </TableBody>
         </Table>
-        <div style={{ padding: 100, paddingLeft: "300px" }}>
-          {pages.map((page) => (
-            <>
-              <Button
-                className={currentPage === page ? "button-active" : ""}
-                variant="contained"
-                sx={{ marginLeft: "20px" }}
-                onClick={() => {
-                  setCurrentPage(page);
-                  router.push({ query: { ...router.query, page: page } });
-                }}
-              >
-                {page}
-              </Button>
-            </>
-          ))}
-        </div>
+        <Box sx={{ display: 'flex', justifyContent: 'center', padding: '20px 0' }}>
+          <Pagination count={10} variant="outlined" color="secondary" onChange={(e, number) => {
+            setCurrentPage(number);
+            router.push({ query: { ...router.query, page: number } });
+          }} page={parseInt((router.query.page as string), 10) || 1} />
+        </Box>
       </TableContainer>
       <AddEmployeeModal
         open={open}
@@ -142,9 +132,11 @@ const TableEmployee: FC<TableEmployeeProps> = ({ data }) => {
       <DeleteEmployeeModal
         openDelete={openDelete}
         employee={employeeID}
+        handleLoaderOpen={handleLoaderOpen}
         handleClickClosed={handleClickClose}
       />
-      
+      <Loader openLoader={openLoader} />
+
     </>
   );
 };
